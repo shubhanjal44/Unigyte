@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+  import { supabase } from '@/lib/supabaseClient'; // adjust path if needed
 import { 
   Mail, 
   Phone, 
@@ -16,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const ContactSection = () => {
   const { toast } = useToast();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,41 +27,50 @@ const ContactSection = () => {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Form validation
-    if (!formData.name || !formData.email || !formData.message) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Simulate form submission
-    toast({
-      title: "Message Sent Successfully!",
-      description: "Thank you for contacting Unigyte. We'll respond within 24 hours.",
-    });
-
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      service: '',
-      message: ''
-    });
-  };
-
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
+
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!formData.name || !formData.email || !formData.message) {
+    toast({
+      title: 'Missing Information',
+      description: 'Please fill in all required fields.',
+      variant: 'destructive'
+    });
+    return;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('contacts')
+      .insert([formData]);
+
+    if (error) {
+      throw error;
+    }
+
+    toast({
+      title: 'Message Sent Successfully!',
+      description: "Thank you for contacting Unigyte. We'll respond within 24 hours."
+    });
+
+    setFormData({ name: '', email: '', phone: '', service: '', message: '' });
+
+  } catch (error: any) {
+    toast({
+      title: 'Submission Failed',
+      description: error.message || 'Something went wrong',
+      variant: 'destructive'
+    });
+  }
+};
 
   const contactInfo = [
     {
@@ -70,7 +82,7 @@ const ContactSection = () => {
     {
       icon: Phone,
       title: 'Call Us',
-      content: '+91 8218162680 ,+91 8279873325 ',
+      content: '+91 8218162680 ,+91 8279873325',
       subtitle: 'Mon - Fri, 9AM - 6PM IST'
     },
     {
@@ -79,7 +91,6 @@ const ContactSection = () => {
       content: 'Agra',
       subtitle: 'Multiple locations across India'
     },
-  
     {
       icon: Globe,
       title: 'Website',
@@ -101,14 +112,11 @@ const ContactSection = () => {
   return (
     <section id="contact" className="py-20 bg-background">
       <div className="container mx-auto px-6">
-        
-        {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center space-x-2 bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm font-medium mb-6">
             <MessageCircle className="h-4 w-4" />
             <span>Get In Touch</span>
           </div>
-          
           <h2 className="text-4xl lg:text-5xl font-space-grotesk font-bold mb-6">
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Let's Build Something
@@ -116,7 +124,6 @@ const ContactSection = () => {
             <br />
             <span className="text-foreground">Amazing Together</span>
           </h2>
-          
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Ready to transform your business with cutting-edge technology? Our experts are here to 
             discuss your project and create tailored solutions that drive results.
@@ -124,7 +131,7 @@ const ContactSection = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-16">
-          
+
           {/* Contact Form */}
           <div className="space-y-8">
             <div>
@@ -227,23 +234,8 @@ const ContactSection = () => {
                 </div>
               ))}
             </div>
-
-            {/* Quick Response Promise */}
-            {/* <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 border border-primary/20">
-              <div className="flex items-start space-x-4">
-                <div className="p-2 bg-gradient-primary rounded-lg">
-                  <Clock className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-card-foreground mb-2">Quick Response Guarantee</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    We understand that time is crucial for your business. Our team commits to responding 
-                    to all inquiries within 24 hours, often much sooner.
-                  </p>
-                </div>
-              </div>
-            </div> */}
           </div>
+
         </div>
       </div>
     </section>
