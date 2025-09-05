@@ -1,241 +1,250 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+"use client";
 
-  import { supabase } from '@/lib/supabaseClient'; // adjust path if needed
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Send, 
-  MessageCircle,
-  Clock,
-  Globe
-} from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Mail, Phone, MapPin, Globe, Send } from "lucide-react";
+import { motion } from "framer-motion";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL as string,
+  import.meta.env.VITE_SUPABASE_ANON_KEY as string
+);
 
 const ContactSection = () => {
-  const { toast } = useToast();
-
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    service: '',
-    message: ''
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+    message: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<null | "success" | "error">(null);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatus(null);
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-
-  if (!formData.name || !formData.email || !formData.message) {
-    toast({
-      title: 'Missing Information',
-      description: 'Please fill in all required fields.',
-      variant: 'destructive'
-    });
-    return;
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from('contacts')
-      .insert([formData]);
+    const { error } = await supabase.from("contacts").insert([
+      {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        service: form.service,
+        message: form.message,
+      },
+    ]);
 
     if (error) {
-      throw error;
+      console.error(error);
+      setStatus("error");
+    } else {
+      setStatus("success");
+      setForm({ name: "", email: "", phone: "", service: "", message: "" });
     }
-
-    toast({
-      title: 'Message Sent Successfully!',
-      description: "Thank you for contacting Unigyte. We'll respond within 24 hours."
-    });
-
-    setFormData({ name: '', email: '', phone: '', service: '', message: '' });
-
-  } catch (error: any) {
-    toast({
-      title: 'Submission Failed',
-      description: error.message || 'Something went wrong',
-      variant: 'destructive'
-    });
-  }
-};
-
-  const contactInfo = [
-    {
-      icon: Mail,
-      title: 'Email Us',
-      content: 'info@unigyte.com',
-      subtitle: 'We respond within 24 hours'
-    },
-    {
-      icon: Phone,
-      title: 'Call Us',
-      content: '+91 8218162680 ,+91 8279873325',
-      subtitle: 'Mon - Fri, 9AM - 6PM IST'
-    },
-    {
-      icon: MapPin,
-      title: 'Visit Us',
-      content: 'Agra',
-      subtitle: 'Multiple locations across India'
-    },
-    {
-      icon: Globe,
-      title: 'Website',
-      content: 'www.unigyte.com',
-      subtitle: '24/7 Online Support'
-    }
-  ];
-
-  const services = [
-    'AI & Robotics',
-    'IoT & Smart Automation',
-    'Drone Technology',
-    'Software & IT Services',
-    'Recruitment & HR',
-    'Strategic Marketing',
-    'Hardware Integration'
-  ];
+    setLoading(false);
+  };
 
   return (
-    <section id="contact" className="py-20 bg-background">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm font-medium mb-6">
-            <MessageCircle className="h-4 w-4" />
-            <span>Get In Touch</span>
-          </div>
-          <h2 className="text-4xl lg:text-5xl font-space-grotesk font-bold mb-6">
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Let's Build Something
-            </span>
-            <br />
-            <span className="text-foreground">Amazing Together</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Ready to transform your business with cutting-edge technology? Our experts are here to 
-            discuss your project and create tailored solutions that drive results.
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-16">
-
+    <section
+      id="contact"
+      className="py-20 bg-gradient-subtle relative overflow-hidden"
+    >
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
           {/* Contact Form */}
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-2xl font-space-grotesk font-semibold mb-4">Send us a Message</h3>
-              <p className="text-muted-foreground">
-                Fill out the form below and we'll get back to you within 24 hours.
-              </p>
-            </div>
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="bg-card/90 backdrop-blur-md p-8 rounded-2xl shadow-strong border border-border/50"
+          >
+            <h2 className="text-3xl font-space-grotesk font-bold mb-2">
+              Send us a Message
+            </h2>
+            <p className="text-muted-foreground mb-8">
+              Fill out the form below and we’ll get back to you within 24 hours.
+            </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Full Name *</label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
+                  <label className="block text-sm font-medium mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
                     placeholder="Your full name"
-                    className="border-border/50 focus:border-primary"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-background border border-border/50 
+                               focus:ring-2 focus:ring-primary/80 focus:border-primary outline-none 
+                               transition placeholder:text-muted-foreground"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Email Address *</label>
-                  <Input
+                  <label className="block text-sm font-medium mb-2">
+                    Email Address *
+                  </label>
+                  <input
                     type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
                     placeholder="your.email@example.com"
-                    className="border-border/50 focus:border-primary"
+                    required
+                    className="w-full px-4 py-3 rounded-xl bg-background border border-border/50 
+                               focus:ring-2 focus:ring-primary/80 focus:border-primary outline-none 
+                               transition placeholder:text-muted-foreground"
                   />
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Phone Number</label>
-                  <Input
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                  <label className="block text-sm font-medium mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
                     placeholder="+91 XXXXX XXXXX"
-                    className="border-border/50 focus:border-primary"
+                    className="w-full px-4 py-3 rounded-xl bg-background border border-border/50 
+                               focus:ring-2 focus:ring-primary/80 focus:border-primary outline-none 
+                               transition placeholder:text-muted-foreground"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Service Interest</label>
-                  <Select value={formData.service} onValueChange={(value) => handleInputChange('service', value)}>
-                    <SelectTrigger className="border-border/50 focus:border-primary">
-                      <SelectValue placeholder="Select a service" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {services.map((service) => (
-                        <SelectItem key={service} value={service.toLowerCase().replace(/\s+/g, '-')}>
-                          {service}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <label className="block text-sm font-medium mb-2">
+                    Service Interest
+                  </label>
+                  <select
+                    name="service"
+                    value={form.service}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl bg-background border border-border/50 
+                               focus:ring-2 focus:ring-primary/80 focus:border-primary outline-none 
+                               transition text-muted-foreground"
+                  >
+                    <option value="">Select a service</option>
+                    <option>AI & Robotics</option>
+                    <option>IoT & Automation</option>
+                    <option>Drone Solutions</option>
+                    <option>Custom IT Services</option>
+                  </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Project Details *</label>
-                <Textarea
-                  value={formData.message}
-                  onChange={(e) => handleInputChange('message', e.target.value)}
+                <label className="block text-sm font-medium mb-2">
+                  Project Details *
+                </label>
+                <textarea
+                  name="message"
+                  rows={4}
+                  value={form.message}
+                  onChange={handleChange}
                   placeholder="Tell us about your project, requirements, timeline, and goals..."
-                  rows={6}
-                  className="border-border/50 focus:border-primary resize-none"
-                />
+                  required
+                  className="w-full px-4 py-3 rounded-xl bg-background border border-border/50 
+                             focus:ring-2 focus:ring-primary/80 focus:border-primary outline-none 
+                             transition placeholder:text-muted-foreground resize-none"
+                ></textarea>
               </div>
 
-              <Button type="submit" className="btn-hero w-full group">
-                Send Message
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full btn-hero group"
+              >
+                {loading ? "Sending..." : "Send Message"}
                 <Send className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </form>
-          </div>
+
+            {status === "success" && (
+              <p className="text-green-600 mt-4">
+                ✅ Message sent successfully!
+              </p>
+            )}
+            {status === "error" && (
+              <p className="text-red-600 mt-4">
+                ❌ Something went wrong. Please try again.
+              </p>
+            )}
+          </motion.div>
 
           {/* Contact Information */}
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-2xl font-space-grotesk font-semibold mb-4">Contact Information</h3>
-              <p className="text-muted-foreground">
-                Multiple ways to reach us. Choose what works best for you.
-              </p>
-            </div>
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="space-y-6"
+          >
+            <h3 className="text-3xl font-space-grotesk font-bold mb-6">
+              Contact Information
+            </h3>
+            <p className="text-muted-foreground mb-8">
+              Multiple ways to reach us. Choose what works best for you.
+            </p>
 
-            <div className="grid gap-6">
-              {contactInfo.map((info, index) => (
-                <div key={index} className="service-card group">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 p-3 bg-gradient-primary rounded-xl group-hover:animate-glow">
-                      <info.icon className="h-6 w-6 text-primary-foreground" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-card-foreground mb-1">{info.title}</h4>
-                      <p className="text-primary font-medium">{info.content}</p>
-                      <p className="text-sm text-muted-foreground">{info.subtitle}</p>
-                    </div>
+            <div className="space-y-6">
+              {[
+                {
+                  icon: Mail,
+                  title: "Email Us",
+                  value: "info@unigyte.com",
+                  desc: "We respond within 24 hours",
+                },
+                {
+                  icon: Phone,
+                  title: "Call Us",
+                  value: "+91 8218162680, +91 8279873325",
+                  desc: "Mon – Fri, 9AM – 6PM IST",
+                },
+                {
+                  icon: MapPin,
+                  title: "Visit Us",
+                  value: "Agra, India",
+                  desc: "Multiple locations across India",
+                },
+                {
+                  icon: Globe,
+                  title: "Website",
+                  value: "www.unigyte.com",
+                  desc: "Explore our digital presence",
+                },
+              ].map((info, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-start space-x-4 p-6 rounded-2xl bg-card/80 border border-border/50 shadow-soft hover:shadow-strong transition"
+                >
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-primary to-secondary text-white">
+                    <info.icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold mb-1">{info.title}</h4>
+                    <p className="text-foreground">{info.value}</p>
+                    <p className="text-sm text-muted-foreground">{info.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-
+          </motion.div>
         </div>
       </div>
     </section>
