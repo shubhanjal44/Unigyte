@@ -8,7 +8,7 @@ import {
   Github,
   Globe
 } from 'lucide-react';
-import logo from "@/assets/favicon.ico.png";
+import logo from "@/assets/Unigyte.logo.png";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
