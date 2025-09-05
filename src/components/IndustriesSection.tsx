@@ -39,13 +39,13 @@ const IndustriesSection = () => {
       stats: '30+ Logistics Solutions',
       color: 'from-indigo-500 to-blue-500'
     },
-    {
-      icon: Wheat,
-      title: 'Agriculture & AgriTech',
-      description: 'Revolutionizing farming with drone monitoring, soil analysis, and precision agriculture technologies.',
-      stats: '75+ Agricultural Projects',
-      color: 'from-green-500 to-lime-500'
-    },
+    // {
+    //   icon: Wheat,
+    //   title: 'Agriculture & AgriTech',
+    //   description: 'Revolutionizing farming with drone monitoring, soil analysis, and precision agriculture technologies.',
+    //   stats: '75+ Agricultural Projects',
+    //   color: 'from-green-500 to-lime-500'
+    // },
     {
       icon: Shield,
       title: 'Security & Surveillance',

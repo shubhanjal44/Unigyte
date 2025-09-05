@@ -8,7 +8,7 @@ import {
   Github,
   Globe
 } from 'lucide-react';
-
+import logo from "@/assets/favicon.ico.png";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -63,11 +63,16 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center space-x-3 font-space-grotesk font-bold text-2xl">
-              <div className="p-2 bg-gradient-primary rounded-xl">
+              {/* <div className="p-2 bg-gradient-primary rounded-xl">
                 <Zap className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Unigyte
+              </div> */}
+              <img
+                src={logo}
+                alt="Unigyte Logo"
+                className="relative  w-20  object-contain z-10"
+              />
+           <span> 
+                UNIGYTE
               </span>
             </div>
             
@@ -84,7 +89,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3 text-muted-foreground">
                 <Phone className="h-4 w-4 text-primary" />
-                <span>+91 (XXX) XXX-XXXX</span>
+                <span>+91 8218162680</span>
               </div>
               <div className="flex items-center space-x-3 text-muted-foreground">
                 <MapPin className="h-4 w-4 text-primary" />

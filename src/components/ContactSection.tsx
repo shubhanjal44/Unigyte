@@ -70,15 +70,16 @@ const ContactSection = () => {
     {
       icon: Phone,
       title: 'Call Us',
-      content: '+91 (XXX) XXX-XXXX',
+      content: '+91 8218162680 ,+91 8279873325 ',
       subtitle: 'Mon - Fri, 9AM - 6PM IST'
     },
     {
       icon: MapPin,
       title: 'Visit Us',
-      content: 'India Headquarters',
+      content: 'Agra',
       subtitle: 'Multiple locations across India'
     },
+  
     {
       icon: Globe,
       title: 'Website',
@@ -228,7 +229,7 @@ const ContactSection = () => {
             </div>
 
             {/* Quick Response Promise */}
-            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 border border-primary/20">
+            {/* <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 border border-primary/20">
               <div className="flex items-start space-x-4">
                 <div className="p-2 bg-gradient-primary rounded-lg">
                   <Clock className="h-5 w-5 text-primary-foreground" />
@@ -241,7 +242,7 @@ const ContactSection = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

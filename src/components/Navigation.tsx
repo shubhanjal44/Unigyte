@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Zap } from 'lucide-react';
-
+import logo from "@/assets/full-logo.png";
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -38,12 +38,17 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center space-x-3 font-space-grotesk font-bold text-2xl text-primary">
-            <div className="p-2 bg-gradient-primary rounded-xl">
+            {/* <div className="p-2 bg-gradient-primary rounded-xl">
               <Zap className="h-6 w-6 text-primary-foreground" />
             </div>
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Unigyte
-            </span>
+            </span> */}
+             <img
+                src={logo}
+                alt="Unigyte Logo"
+                className="relative  w-40  object-contain z-10"
+              />
           </div>
 
           {/* Desktop Navigation */}

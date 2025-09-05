@@ -45,12 +45,12 @@ const AboutSection = () => {
             </div>
             
             {/* Stats Card */}
-            <div className="absolute -bottom-8 -right-8 bg-card p-6 rounded-2xl shadow-strong border border-border/50">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary font-space-grotesk mb-1">5+</div>
-                <div className="text-sm text-muted-foreground">Years Innovation</div>
-              </div>
-            </div>
+            {/* <div className="absolute -bottom-8 -right-8 bg-card p-6 rounded-2xl shadow-strong border border-border/50"> */}
+              {/* <div className="text-center"> */}
+                {/* <div className="text-3xl font-bold text-primary font-space-grotesk mb-1">5+</div> */}
+                {/* <div className="text-sm text-muted-foreground">Years Innovation</div> */}
+              {/* </div> */}
+            {/* </div> */}
           </div>
 
           {/* Content */}
