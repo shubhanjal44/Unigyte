@@ -12,7 +12,11 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: {
+				DEFAULT: '1rem',
+				sm: '1.5rem',
+				lg: '2rem',
+			},
 			screens: {
 				'2xl': '1400px'
 			}
@@ -86,26 +90,48 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
-				}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'bounce-slow': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-8px)' },
+				},
+				'fade-in': {
+					from: { opacity: '0', transform: 'translateY(14px)' },
+					to: { opacity: '1', transform: 'translateY(0)' },
+				},
+				'slide-down': {
+					from: { opacity: '0', transform: 'translateY(-10px)' },
+					to: { opacity: '1', transform: 'translateY(0)' },
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+					'50%': { transform: 'translateY(-12px) rotate(2deg)' },
+				},
+				'glow': {
+					from: { boxShadow: '0 0 20px hsl(220 90% 56% / 0.5)' },
+					to: { boxShadow: '0 0 36px hsl(180 85% 40% / 0.7)' },
+				},
+				'pulse-ring': {
+					'0%': { transform: 'scale(1)', opacity: '0.6' },
+					'70%, 100%': { transform: 'scale(1.4)', opacity: '0' },
+				},
 			},
 			
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'bounce-slow': 'bounce-slow 3s ease-in-out infinite',
+				'fade-in': 'fade-in 0.8s ease-out both',
+				'slide-down': 'slide-down 0.3s ease-out both',
+				'float': 'float 6s ease-in-out infinite',
+				'glow': 'glow 2s ease-in-out infinite alternate',
+				'pulse-ring': 'pulse-ring 2s ease-out infinite',
 			}
 
 			
